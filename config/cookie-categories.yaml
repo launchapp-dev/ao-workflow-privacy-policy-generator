@@ -1,0 +1,42 @@
+cookie_categories:
+  strictly_necessary:
+    description: "Essential cookies required for the website to function. Cannot be disabled."
+    gdpr_exempt: true
+    ccpa_category: "essential"
+    default_consent: true
+    examples:
+      - session_id
+      - csrf_token
+      - auth_token
+
+  functional:
+    description: "Cookies that enable enhanced functionality and personalization."
+    gdpr_exempt: false
+    ccpa_category: "functional"
+    default_consent: false
+    examples:
+      - user_preferences
+      - language
+      - theme
+
+  analytics:
+    description: "Cookies that help understand how visitors use the website."
+    gdpr_exempt: false
+    ccpa_category: "analytics"
+    default_consent: false
+    examples:
+      - _ga
+      - _gid
+      - _gat
+      - amplitude_id
+
+  marketing:
+    description: "Cookies used to track visitors across websites for advertising purposes."
+    gdpr_exempt: false
+    ccpa_category: "sale"
+    default_consent: false
+    requires_explicit_consent: true
+    examples:
+      - _fbp
+      - _fbc
+      - ads_session

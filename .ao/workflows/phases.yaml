@@ -1,0 +1,183 @@
+phases:
+  scan-product:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "bash scripts/scan-product.sh"]
+      cwd_mode: project_root
+      timeout_secs: 120
+
+  map-data-flows:
+    mode: agent
+    agent: classifier
+    directive: |
+      Read the raw scan results from data/scan-results/raw-findings.json and
+      data/scan-results/third-parties.json.
+
+      Map each identified data element through its complete lifecycle:
+      collection → processing → storage → sharing → retention → deletion.
+
+      Classify each element by sensitivity (low/medium/high/critical).
+
+      Identify which regulations are triggered (GDPR/CCPA/COPPA) and why.
+
+      Write your output to:
+      - data/analysis/data-flow-map.json
+      - data/analysis/sensitivity-classification.json
+      - data/analysis/regulatory-triggers.json
+    capabilities:
+      mutates_state: true
+      writes_files: true
+
+  review-classification:
+    mode: agent
+    agent: reviewer
+    directive: |
+      Review the data flow classification in data/analysis/:
+      - data-flow-map.json: verify every detected data point has a complete lifecycle mapped
+      - sensitivity-classification.json: check classifications are defensible
+      - regulatory-triggers.json: verify no regulations are missed
+
+      Check for common gaps:
+      - Server logs and error tracking often missed
+      - Third-party data sharing must be fully enumerated
+      - Automated decision-making triggers GDPR Art. 22
+
+      Verdict: approve (classification is complete and accurate) or rework (specific gaps found).
+      List any issues[] with section and description.
+    decision_contract:
+      required_fields: [verdict, reasoning, issues]
+
+  draft-policies:
+    mode: agent
+    agent: drafter
+    directive: |
+      Read from:
+      - data/analysis/data-flow-map.json
+      - data/analysis/sensitivity-classification.json
+      - data/analysis/regulatory-triggers.json
+      - config/product-config.yaml (company info, DPO, jurisdictions)
+      - config/templates/ (policy templates)
+
+      Generate and write:
+      1. output/policies/gdpr-privacy-policy.md (if GDPR triggered)
+      2. output/policies/ccpa-privacy-policy.md (if CCPA triggered)
+      3. output/policies/coppa-privacy-policy.md (if COPPA triggered)
+      4. output/policies/privacy-policy.md (combined, all jurisdictions)
+      5. output/records/article-30-processing-record.md
+      6. output/records/data-processing-inventory.md
+      7. output/configs/cookie-consent.json
+    capabilities:
+      mutates_state: true
+      writes_files: true
+
+  legal-review:
+    mode: agent
+    agent: reviewer
+    directive: |
+      Perform a systematic legal compliance review of all generated policy documents.
+
+      Read all files in output/policies/ and output/records/.
+      Compare against data/analysis/data-flow-map.json to verify accuracy.
+
+      Check each policy for:
+      1. Completeness: all required sections per regulation
+      2. Accuracy: policy text matches actual data flows
+      3. Consistency: no contradictions between jurisdiction policies
+      4. Plain language: accessible to general audience
+      5. Legal sufficiency: all required disclosures present
+
+      Verdict:
+      - approve: ready to publish, no material issues
+      - rework: fixable issues found (list findings[] with severity/section/description/recommendation)
+      - escalate: non-compliant or requires human legal counsel (list critical findings[])
+    decision_contract:
+      required_fields: [verdict, reasoning, findings]
+
+  version-policies:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "bash scripts/version-policies.sh"]
+      cwd_mode: project_root
+      timeout_secs: 60
+
+  generate-report:
+    mode: agent
+    agent: drafter
+    directive: |
+      Generate a final audit summary report at output/audit-report.md.
+
+      Read all analysis files from data/analysis/ and all generated documents from output/.
+
+      The report must include:
+      1. Executive summary: jurisdictions covered, data sensitivity breakdown, third-party count, policies generated
+      2. Data flow summary table (category, collection, processing, storage, sharing, retention)
+      3. Generated document manifest with file paths
+      4. Change summary (compare with previous version if data/version-history.json exists)
+      5. Recommended next steps (annual review date, cookie consent setup, legal counsel review)
+    capabilities:
+      mutates_state: true
+      writes_files: true
+      requires_commit: true
+
+  escalate-to-human:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "mkdir -p output/alerts && echo \"{\\\"escalated_at\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\", \\\"reason\\\": \\\"Legal review escalated — requires human legal counsel\\\", \\\"status\\\": \\\"URGENT\\\"}\" > output/alerts/legal-escalation-$(date +%Y%m%d-%H%M%S).json && echo 'ESCALATED: Policy requires human legal review. See output/alerts/ for details.' >&2 && exit 0"]
+      cwd_mode: project_root
+      timeout_secs: 30
+
+  detect-changes:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "bash scripts/detect-changes.sh"]
+      cwd_mode: project_root
+      timeout_secs: 120
+
+  assess-impact:
+    mode: agent
+    agent: classifier
+    directive: |
+      Read the change report from the most recent file in data/reviews/ (changes-{date}.json).
+
+      Classify the impact of each change:
+      - No impact: cosmetic changes, non-data-related features
+      - Minor update: new analytics events, UI text changes
+      - Major update: new data collection, new third-party sharing, new jurisdiction
+      - Non-compliant: removed consent mechanism, new high-sensitivity data without safeguards
+
+      Verdict:
+      - policy-current: no material changes, policies remain accurate
+      - needs-update: material changes detected, full policy regeneration needed
+      - non-compliant: compliance risk detected, immediate escalation required
+
+      List changes[] with category and impact level.
+    decision_contract:
+      required_fields: [verdict, reasoning, changes]
+
+  queue-policy-update:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "mkdir -p output/alerts && echo \"{\\\"update_needed\\\": true, \\\"detected_at\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\", \\\"action\\\": \\\"Run generate-policies workflow to regenerate policies\\\"}\" > output/alerts/update-needed-$(date +%Y%m%d).json && echo 'Policy update required. Run: ao workflow run generate-policies'"]
+      cwd_mode: project_root
+      timeout_secs: 30
+
+  write-compliance-alert:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "mkdir -p output/alerts && echo \"{\\\"compliance_alert\\\": true, \\\"severity\\\": \\\"CRITICAL\\\", \\\"detected_at\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\", \\\"action\\\": \\\"Immediate legal review required\\\"}\" > output/alerts/compliance-alert-$(date +%Y%m%d-%H%M%S).json && echo 'COMPLIANCE ALERT: Non-compliant change detected. See output/alerts/' >&2"]
+      cwd_mode: project_root
+      timeout_secs: 30
+
+  policy-up-to-date:
+    mode: command
+    command:
+      program: bash
+      args: ["-c", "echo \"{\\\"checked_at\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\", \\\"status\\\": \\\"current\\\"}\" >> data/reviews/last-check.json && echo 'Policies are current. No update needed.'"]
+      cwd_mode: project_root
+      timeout_secs: 30

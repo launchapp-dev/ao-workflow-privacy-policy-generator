@@ -1,0 +1,15 @@
+product:
+  name: "MyApp"
+  directory: "./sample-product"
+  company:
+    name: "Acme Corp"
+    address: "123 Main St, San Francisco, CA 94105"
+    website: "https://myapp.example.com"
+  dpo:
+    name: "Jane Smith"
+    email: "privacy@acme-corp.example.com"
+  jurisdictions:
+    - GDPR
+    - CCPA
+  review_schedule: quarterly
+  effective_date: "2026-04-01"

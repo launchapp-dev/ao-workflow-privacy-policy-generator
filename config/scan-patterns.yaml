@@ -1,0 +1,95 @@
+data_collection_patterns:
+  pii:
+    - pattern: '(email|e-mail|emailAddress)'
+      category: contact_info
+      sensitivity: medium
+    - pattern: '(password|passwd|secret)'
+      category: credentials
+      sensitivity: high
+    - pattern: '(firstName|lastName|fullName|displayName)'
+      category: identity
+      sensitivity: medium
+    - pattern: '(ssn|socialSecurity|taxId)'
+      category: government_id
+      sensitivity: critical
+    - pattern: '(dateOfBirth|dob|birthDate|age)'
+      category: demographics
+      sensitivity: high
+    - pattern: '(phone|phoneNumber|mobile|telephone)'
+      category: contact_info
+      sensitivity: medium
+    - pattern: '(address|street|city|zipCode|postalCode)'
+      category: location_address
+      sensitivity: medium
+  financial:
+    - pattern: '(creditCard|cardNumber|cvv|paymentMethod)'
+      category: payment
+      sensitivity: critical
+    - pattern: '(bankAccount|routingNumber|iban)'
+      category: banking
+      sensitivity: critical
+    - pattern: '(stripe|braintree|paypal|square)'
+      category: payment_processor
+      sensitivity: high
+  tracking:
+    - pattern: '(cookie|setCookie|document\.cookie)'
+      category: cookies
+      sensitivity: medium
+    - pattern: '(localStorage|sessionStorage)'
+      category: browser_storage
+      sensitivity: medium
+    - pattern: '(analytics|tracking|pageview|event\()'
+      category: analytics
+      sensitivity: medium
+    - pattern: '(geolocation|navigator\.geolocation|geoip)'
+      category: location
+      sensitivity: high
+    - pattern: '(fingerprint|canvas|webgl|audioContext)'
+      category: device_fingerprinting
+      sensitivity: high
+    - pattern: '(ip_address|ipAddress|user_agent|userAgent)'
+      category: network_info
+      sensitivity: medium
+  health:
+    - pattern: '(health|medical|diagnosis|prescription|medication)'
+      category: health_data
+      sensitivity: critical
+    - pattern: '(biometric|facial|fingerprint|voiceprint)'
+      category: biometric
+      sensitivity: critical
+    - pattern: '(disability|condition|symptoms)'
+      category: health_data
+      sensitivity: critical
+  children:
+    - pattern: '(age_verification|parental_consent|coppa|under_13)'
+      category: children_data
+      sensitivity: critical
+
+third_party_sdks:
+  - pattern: 'google-analytics|gtag|GA_TRACKING|_ga'
+    service: "Google Analytics"
+    data_shared: ["page views", "user behavior", "device info"]
+  - pattern: 'segment|analytics\.identify'
+    service: "Segment"
+    data_shared: ["user identity", "events", "traits"]
+  - pattern: 'mixpanel'
+    service: "Mixpanel"
+    data_shared: ["user events", "properties", "device info"]
+  - pattern: 'hotjar|hj\('
+    service: "Hotjar"
+    data_shared: ["session recordings", "heatmaps", "user behavior"]
+  - pattern: 'sentry|Sentry\.init'
+    service: "Sentry"
+    data_shared: ["error reports", "stack traces", "user context"]
+  - pattern: 'intercom'
+    service: "Intercom"
+    data_shared: ["user identity", "conversations", "events"]
+  - pattern: 'facebook-pixel|fbq\('
+    service: "Facebook Pixel"
+    data_shared: ["page views", "conversions", "user actions"]
+  - pattern: 'amplitude'
+    service: "Amplitude"
+    data_shared: ["user events", "properties", "session data"]
+  - pattern: 'datadog'
+    service: "Datadog"
+    data_shared: ["logs", "metrics", "traces", "user context"]

@@ -1,0 +1,5 @@
+schedules:
+  - id: quarterly-policy-review
+    cron: "0 9 1 */3 *"
+    workflow_ref: quarterly-review
+    enabled: true

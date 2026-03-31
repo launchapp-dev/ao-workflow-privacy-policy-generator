@@ -1,0 +1,53 @@
+default_workflow_ref: generate-policies
+
+workflows:
+  - id: generate-policies
+    name: "Generate Privacy Policies"
+    description: "Full pipeline: scan product for data collection, classify data flows, draft jurisdiction-specific policies, legal review, version, and report"
+    phases:
+      - scan-product
+      - map-data-flows
+      - review-classification:
+          on_verdict:
+            approve:
+              target: draft-policies
+            rework:
+              target: map-data-flows
+          max_rework_attempts: 2
+      - draft-policies
+      - legal-review:
+          on_verdict:
+            approve:
+              target: version-policies
+            rework:
+              target: draft-policies
+            escalate:
+              target: escalate-to-human
+          max_rework_attempts: 2
+      - version-policies
+      - generate-report
+      - escalate-to-human
+    post_success:
+      merge:
+        strategy: squash
+        target_branch: main
+        create_pr: true
+        auto_merge: true
+        cleanup_worktree: true
+
+  - id: quarterly-review
+    name: "Quarterly Policy Review"
+    description: "Lightweight quarterly check: detect product changes since last policy generation and assess if policies need updating"
+    phases:
+      - detect-changes
+      - assess-impact:
+          on_verdict:
+            policy-current:
+              target: policy-up-to-date
+            needs-update:
+              target: queue-policy-update
+            non-compliant:
+              target: write-compliance-alert
+      - policy-up-to-date
+      - queue-policy-update
+      - write-compliance-alert

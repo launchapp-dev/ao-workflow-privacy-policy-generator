@@ -1,0 +1,81 @@
+{
+  "scanned_at": "2026-03-31T15:14:20.568338Z",
+  "product_directory": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product",
+  "third_parties": [
+    {
+      "service": "Google Analytics",
+      "pattern_matched": "google-analytics|gtag|GA_TRACKING",
+      "data_shared": [
+        "page views",
+        "user behavior",
+        "device info"
+      ],
+      "evidence": [
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:34:const GA_TRACKING_ID = process.env.GA_TRACKING_ID;",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:40:  GA_TRACKING_ID,",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js:4:// Google Analytics (gtag)"
+      ],
+      "detected": true
+    },
+    {
+      "service": "Segment",
+      "pattern_matched": "segment|analytics\\.identify",
+      "data_shared": [
+        "user identity",
+        "events",
+        "traits"
+      ],
+      "evidence": [
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js:16:const analytics = require('@segment/analytics-next');",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js:43:  analytics.identify(userId, {"
+      ],
+      "detected": true
+    },
+    {
+      "service": "Sentry",
+      "pattern_matched": "sentry|Sentry\\.init",
+      "data_shared": [
+        "error reports",
+        "stack traces",
+        "user context"
+      ],
+      "evidence": [
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/package.json:13:    \"@sentry/node\": \"^7.0.0\",",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:3:const Sentry = require('@sentry/node');",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:6:Sentry.init({"
+      ],
+      "detected": true
+    },
+    {
+      "service": "Intercom",
+      "pattern_matched": "intercom",
+      "data_shared": [
+        "user identity",
+        "conversations",
+        "events"
+      ],
+      "evidence": [
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/package.json:14:    \"intercom\": \"^1.0.0\",",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:28:const intercomConfig = {",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:39:  intercomConfig,"
+      ],
+      "detected": true
+    },
+    {
+      "service": "Stripe",
+      "pattern_matched": "stripe",
+      "data_shared": [
+        "payment info",
+        "billing",
+        "transaction data"
+      ],
+      "evidence": [
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/package.json:12:    \"stripe\": \"^14.0.0\",",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js:42:  stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY",
+        "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js:2:const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);"
+      ],
+      "detected": true
+    }
+  ],
+  "count": 5
+}

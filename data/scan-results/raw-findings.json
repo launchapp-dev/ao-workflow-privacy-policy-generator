@@ -1,0 +1,278 @@
+{
+  "scanned_at": "2026-03-31T15:14:20.506602Z",
+  "product_directory": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product",
+  "findings": [
+    {
+      "pattern": "email|e-mail|emailAddress",
+      "category": "contact_info",
+      "sensitivity": "medium",
+      "match_count": 9,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "6",
+          "content": "async function registerUser({ email, password, firstName, lastName, dateOfBirth }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "10",
+          "content": "`INSERT INTO users (email, password_hash, first_name, last_name, date_of_birth, created_at)"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "12",
+          "content": "RETURNING id, email, first_name, last_name`,"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "13",
+          "content": "[email, hashedPassword, firstName, lastName, dateOfBirth]"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "19",
+          "content": "async function loginUser({ email, password, ipAddress, userAgent }) {"
+        }
+      ]
+    },
+    {
+      "pattern": "password|passwd",
+      "category": "credentials",
+      "sensitivity": "high",
+      "match_count": 6,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/.env.example",
+          "line": "5",
+          "content": "DATABASE_URL=postgresql://user:password@localhost:5432/myapp"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "6",
+          "content": "async function registerUser({ email, password, firstName, lastName, dateOfBirth }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "7",
+          "content": "const hashedPassword = await bcrypt.hash(password, 12);"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "10",
+          "content": "`INSERT INTO users (email, password_hash, first_name, last_name, date_of_birth, created_at)"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "19",
+          "content": "async function loginUser({ email, password, ipAddress, userAgent }) {"
+        }
+      ]
+    },
+    {
+      "pattern": "firstName|lastName|fullName|displayName",
+      "category": "identity",
+      "sensitivity": "medium",
+      "match_count": 5,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "6",
+          "content": "async function registerUser({ email, password, firstName, lastName, dateOfBirth }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "13",
+          "content": "[email, hashedPassword, firstName, lastName, dateOfBirth]"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "37",
+          "content": "async function updateProfile({ userId, firstName, lastName, phone, address }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "41",
+          "content": "[firstName, lastName, phone, address, userId]"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "45",
+          "content": "name: traits.firstName + ' ' + traits.lastName,"
+        }
+      ]
+    },
+    {
+      "pattern": "dateOfBirth|dob|birthDate",
+      "category": "demographics",
+      "sensitivity": "high",
+      "match_count": 2,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "6",
+          "content": "async function registerUser({ email, password, firstName, lastName, dateOfBirth }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "13",
+          "content": "[email, hashedPassword, firstName, lastName, dateOfBirth]"
+        }
+      ]
+    },
+    {
+      "pattern": "phone|phoneNumber|mobile",
+      "category": "contact_info",
+      "sensitivity": "medium",
+      "match_count": 3,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "37",
+          "content": "async function updateProfile({ userId, firstName, lastName, phone, address }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "39",
+          "content": "`UPDATE users SET first_name = $1, last_name = $2, phone = $3, address = $4"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "41",
+          "content": "[firstName, lastName, phone, address, userId]"
+        }
+      ]
+    },
+    {
+      "pattern": "creditCard|cardNumber|cvv|paymentMethod",
+      "category": "payment",
+      "sensitivity": "critical",
+      "match_count": 8,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js",
+          "line": "5",
+          "content": "async function createPaymentIntent({ userId, amount, currency = 'usd', paymentMethod }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js",
+          "line": "9",
+          "content": "payment_method: paymentMethod,"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js",
+          "line": "23",
+          "content": "async function savePaymentMethod({ userId, cardNumber, expiryMonth, expiryYear, cvv }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js",
+          "line": "25",
+          "content": "// This is demo code \u2014 actual cardNumber/cvv never stored server-side"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/payments.js",
+          "line": "26",
+          "content": "const paymentMethod = await stripe.paymentMethods.create({"
+        }
+      ]
+    },
+    {
+      "pattern": "cookie|setCookie|localStorage|sessionStorage",
+      "category": "tracking",
+      "sensitivity": "medium",
+      "match_count": 7,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/package.json",
+          "line": "18",
+          "content": "\"cookie-parser\": \"^1.4.6\""
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "51",
+          "content": "// Store user preferences in localStorage"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "53",
+          "content": "localStorage.setItem('user_preferences', JSON.stringify(preferences));"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "57",
+          "content": "return JSON.parse(localStorage.getItem('user_preferences') || '{}');"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "61",
+          "content": "function setCookie(name, value, days) {"
+        }
+      ]
+    },
+    {
+      "pattern": "analytics|tracking|pageview",
+      "category": "analytics",
+      "sensitivity": "medium",
+      "match_count": 10,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/.env.example",
+          "line": "14",
+          "content": "# Error tracking"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js",
+          "line": "5",
+          "content": "// Initialize Sentry error tracking"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "2",
+          "content": "// Uses Google Analytics and Segment for analytics"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "5",
+          "content": "function initGoogleAnalytics(trackingId) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/analytics.js",
+          "line": "9",
+          "content": "gtag('config', trackingId, {"
+        }
+      ]
+    },
+    {
+      "pattern": "ip_address|ipAddress|user_agent|userAgent",
+      "category": "network_info",
+      "sensitivity": "medium",
+      "match_count": 4,
+      "sample_matches": [
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "19",
+          "content": "async function loginUser({ email, password, ipAddress, userAgent }) {"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "28",
+          "content": "`INSERT INTO auth_logs (user_id, ip_address, user_agent, logged_at)"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/auth.js",
+          "line": "30",
+          "content": "[user.rows[0].id, ipAddress, userAgent]"
+        },
+        {
+          "file": "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/src/config.js",
+          "line": "15",
+          "content": "delete event.user.ip_address;"
+        }
+      ]
+    }
+  ],
+  "config_files_found": [
+    "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/package.json",
+    "/Users/samishukri/ao-examples/examples/privacy-policy-generator/sample-product/.env.example"
+  ],
+  "total_pattern_matches": 54
+}
